@@ -35,7 +35,7 @@ def load_fonts():
     # Verify fonts exist
     for weight, path in fonts.items():
         if not os.path.exists(path):
-            print(f"ΓÜá Font not found: {path}")
+            print(f"✘ Font not found: {path}")
             return None
     
     return fonts
@@ -77,7 +77,7 @@ def load_theme(theme_name="feature_based"):
     theme_file = os.path.join(THEMES_DIR, f"{theme_name}.json")
     
     if not os.path.exists(theme_file):
-        print(f"ΓÜá Theme file '{theme_file}' not found. Using default feature_based theme.")
+        print(f"✘ Theme file '{theme_file}' not found. Using default feature_based theme.")
         # Fallback to embedded default theme
         return {
             "name": "Feature-Based Shading",
@@ -96,7 +96,7 @@ def load_theme(theme_name="feature_based"):
     
     with open(theme_file, 'r') as f:
         theme = json.load(f)
-        print(f"Γ£ô Loaded theme: {theme.get('name', theme_name)}")
+        print(f"✔ Loaded theme: {theme.get('name', theme_name)}")
         if 'description' in theme:
             print(f"  {theme['description']}")
         return theme
@@ -214,8 +214,8 @@ def get_coordinates(city, country):
     location = geolocator.geocode(f"{city}, {country}")
     
     if location:
-        print(f"Γ£ô Found: {location.address}")
-        print(f"Γ£ô Coordinates: {location.latitude}, {location.longitude}")
+        print(f"✔ Found: {location.address}")
+        print(f"✔ Coordinates: {location.latitude}, {location.longitude}")
         return (location.latitude, location.longitude)
     else:
         raise ValueError(f"Could not find coordinates for {city}, {country}")
@@ -248,7 +248,7 @@ def create_poster(city, country, point, dist, output_file, output_format):
             parks = None
         pbar.update(1)
     
-    print("Γ£ô All data downloaded successfully!")
+    print("✔ All data downloaded successfully!")
     
     # 2. Setup Plot
     print("Rendering map...")
@@ -358,7 +358,7 @@ def create_poster(city, country, point, dist, output_file, output_format):
     plt.savefig(output_file, format=fmt, **save_kwargs)
 
     plt.close()
-    print(f"Γ£ô Done! Poster saved as {output_file}")
+    print(f"✔ Done! Poster saved as {output_file}")
 
 
 def print_examples():
@@ -501,11 +501,14 @@ Examples:
         create_poster(args.city, args.country, coords, args.distance, output_file, args.format)
         
         print("\n" + "=" * 50)
-        print("Γ£ô Poster generation complete!")
+        print("✔ Poster generation complete!")
         print("=" * 50)
         
     except Exception as e:
-        print(f"\nΓ£ù Error: {e}")
+        print(f"\n✘ Error: {e}")
         import traceback
         traceback.print_exc()
         os.sys.exit(1)
+
+
+
