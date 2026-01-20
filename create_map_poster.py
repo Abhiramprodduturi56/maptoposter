@@ -1,4 +1,4 @@
-import osmnx as ox
+﻿import osmnx as ox
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 import matplotlib.colors as mcolors
@@ -8,8 +8,14 @@ from tqdm import tqdm
 import time
 import json
 import os
+import sys
 from datetime import datetime
 import argparse
+
+# Force UTF-8 encoding for stdout/stderr on Windows (helps streaming logs)
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
 THEMES_DIR = "themes"
 FONTS_DIR = "fonts"
@@ -29,7 +35,7 @@ def load_fonts():
     # Verify fonts exist
     for weight, path in fonts.items():
         if not os.path.exists(path):
-            print(f"⚠ Font not found: {path}")
+            print(f"ΓÜá Font not found: {path}")
             return None
     
     return fonts
@@ -71,7 +77,7 @@ def load_theme(theme_name="feature_based"):
     theme_file = os.path.join(THEMES_DIR, f"{theme_name}.json")
     
     if not os.path.exists(theme_file):
-        print(f"⚠ Theme file '{theme_file}' not found. Using default feature_based theme.")
+        print(f"ΓÜá Theme file '{theme_file}' not found. Using default feature_based theme.")
         # Fallback to embedded default theme
         return {
             "name": "Feature-Based Shading",
@@ -90,7 +96,7 @@ def load_theme(theme_name="feature_based"):
     
     with open(theme_file, 'r') as f:
         theme = json.load(f)
-        print(f"✓ Loaded theme: {theme.get('name', theme_name)}")
+        print(f"Γ£ô Loaded theme: {theme.get('name', theme_name)}")
         if 'description' in theme:
             print(f"  {theme['description']}")
         return theme
@@ -200,7 +206,7 @@ def get_coordinates(city, country):
     Includes rate limiting to be respectful to the geocoding service.
     """
     print("Looking up coordinates...")
-    geolocator = Nominatim(user_agent="city_map_poster", timeout=10)
+    geolocator = Nominatim(user_agent="MapToPosterGenerator/1.0", timeout=10)
     
     # Add a small delay to respect Nominatim's usage policy
     time.sleep(1)
@@ -208,8 +214,8 @@ def get_coordinates(city, country):
     location = geolocator.geocode(f"{city}, {country}")
     
     if location:
-        print(f"✓ Found: {location.address}")
-        print(f"✓ Coordinates: {location.latitude}, {location.longitude}")
+        print(f"Γ£ô Found: {location.address}")
+        print(f"Γ£ô Coordinates: {location.latitude}, {location.longitude}")
         return (location.latitude, location.longitude)
     else:
         raise ValueError(f"Could not find coordinates for {city}, {country}")
@@ -242,7 +248,7 @@ def create_poster(city, country, point, dist, output_file, output_format):
             parks = None
         pbar.update(1)
     
-    print("✓ All data downloaded successfully!")
+    print("Γ£ô All data downloaded successfully!")
     
     # 2. Setup Plot
     print("Rendering map...")
@@ -319,7 +325,7 @@ def create_poster(city, country, point, dist, output_file, output_format):
             color=THEME['text'], ha='center', fontproperties=font_sub, zorder=11)
     
     lat, lon = point
-    coords = f"{lat:.4f}° N / {lon:.4f}° E" if lat >= 0 else f"{abs(lat):.4f}° S / {lon:.4f}° E"
+    coords = f"{lat:.4f}┬░ N / {lon:.4f}┬░ E" if lat >= 0 else f"{abs(lat):.4f}┬░ S / {lon:.4f}┬░ E"
     if lon < 0:
         coords = coords.replace("E", "W")
     
@@ -335,7 +341,7 @@ def create_poster(city, country, point, dist, output_file, output_format):
     else:
         font_attr = FontProperties(family='monospace', size=8)
     
-    ax.text(0.98, 0.02, "© OpenStreetMap contributors", transform=ax.transAxes,
+    ax.text(0.98, 0.02, "┬⌐ OpenStreetMap contributors", transform=ax.transAxes,
             color=THEME['text'], alpha=0.5, ha='right', va='bottom', 
             fontproperties=font_attr, zorder=11)
 
@@ -352,7 +358,7 @@ def create_poster(city, country, point, dist, output_file, output_format):
     plt.savefig(output_file, format=fmt, **save_kwargs)
 
     plt.close()
-    print(f"✓ Done! Poster saved as {output_file}")
+    print(f"Γ£ô Done! Poster saved as {output_file}")
 
 
 def print_examples():
@@ -495,11 +501,11 @@ Examples:
         create_poster(args.city, args.country, coords, args.distance, output_file, args.format)
         
         print("\n" + "=" * 50)
-        print("✓ Poster generation complete!")
+        print("Γ£ô Poster generation complete!")
         print("=" * 50)
         
     except Exception as e:
-        print(f"\n✗ Error: {e}")
+        print(f"\nΓ£ù Error: {e}")
         import traceback
         traceback.print_exc()
         os.sys.exit(1)
